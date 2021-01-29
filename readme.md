@@ -6,7 +6,7 @@ If both parties are correct, they will get a tie. This game is actually controll
 
 ## Visualisation
 
-![minimax](https://github.com/anandman03/Smart-Tic-Tac-Toe/blob/main/public/minimax.jpg)
+![minimax](https://raw.githubusercontent.com/anandman03/Smart-Tic-Tac-Toe/main/Public/minimax.jpg)
 
 ## Installation
 
