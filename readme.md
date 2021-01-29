@@ -14,6 +14,7 @@ If both parties are correct, they will get a tie. This game is actually controll
 $ git clone https://github.com/anandman03/Smart-Tic-Tac-Toe.git
 $ cd Smart-Tic-Tac-Toe
 $ g++ Source.cpp
+$ ./a.out
 ```
 
 ## Code Snippets
