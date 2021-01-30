@@ -9,8 +9,9 @@ private:
 	int x, y;
 
 public:
-	Cell() {
-		this->x = this->y = 0;
+	Cell(const int &x, const int &y) {
+		this->x = x;
+		this->y = y;
 	}
 
 	void setCoordinates(const vector<int> &p) {
@@ -104,7 +105,6 @@ public:
 	int miniMax(bool isMaximizer) {
 		// evaluate score based on current board.
 		int score = evaluate();
-
 		// if maximizer has won/lost return evaluated score.
 		if(score == 10 || score == -10) {
 			return score;
@@ -147,11 +147,9 @@ public:
 	// This will return the best possible move for the player.
 	void getBestMove() {
 		int bestValue = -INF;
-		Cell bestMove;
-
-		// Traverse all cells, evaluate minimax function for
-		// all empty cells. And return the cell with optimal
-		// value.
+		Cell bestMove(-1, -1);
+		// Traverse all cells, evaluate minimax function for all empty cells. And 
+		// return the cell with optimal value.
 		for(int i = 0 ; i < n ; ++i) {
 			for(int j = 0 ; j < n ; ++j) {
 				// if cell is empty.
