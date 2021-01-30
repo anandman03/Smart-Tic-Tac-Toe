@@ -101,51 +101,8 @@ public:
 		return false;
 	}
 
-	//  It considers all the possible ways the game can go and returns the value of the board.
-	int miniMax(bool isMaximizer) {
-		// evaluate score based on current board.
-		int score = evaluate();
-		// if maximizer has won/lost return evaluated score.
-		if(score == 10 || score == -10) {
-			return score;
-		}
-		// if no moves are left then there is draw return 0 score.
-		if(!isMovesLeft()) {
-			return 0;
-		}
-
-		int bestScore;
-		// if this is maximizer's move.
-		if(isMaximizer) {
-			bestScore = -INF;
-			for(int i = 0 ; i < n ; ++i) {
-				for(int j = 0 ; j < n ; ++j) {
-					if(board[i][j] == '.') {
-						board[i][j] = player;
-						bestScore = max(bestScore, miniMax(!isMaximizer));
-						board[i][j] = '.';
-					}
-				}
-			}
-		}
-		// if this is not maximizer's move.
-		else {
-			bestScore = INF;
-			for(int i = 0 ; i < n ; ++i) {
-				for(int j = 0 ; j < n ; ++j) {
-					if(board[i][j] == '.') {
-						board[i][j] = opponent;
-						bestScore = min(bestScore, miniMax(!isMaximizer));
-						board[i][j] = '.';
-					}
-				}
-			}
-		}
-		return bestScore;
-	}
-
 	// This will return the best possible move for the player.
-	void getBestMove() {
+	void miniMaxAlgorithm() {
 		int bestValue = -INF;
 		Cell bestMove(-1, -1);
 		// Traverse all cells, evaluate minimax function for all empty cells. And 
@@ -155,7 +112,7 @@ public:
 				// if cell is empty.
 				if(board[i][j] == '.') {
 					board[i][j] = player;
-					int currValue = miniMax(false);
+					int currValue = minimizer(0, -INF, INF);
 					board[i][j] = '.';
 					// update best move.
 					if(bestValue < currValue) {
@@ -168,6 +125,64 @@ public:
 
 		vector<int> currCoordinates = bestMove.getCoordinates();
 		board[currCoordinates[0]][currCoordinates[1]] = player;
+	}
+
+	int maximizer(int level, int alpha, int beta) {
+		// evaluate score based on current board.
+		int score = evaluate();
+		// if maximizer has won/lost return evaluated score.
+		if(score == 10 || score == -10) {
+			return score;
+		}
+		// if no moves are left then there is draw return 0 score.
+		if(!isMovesLeft()) {
+			return 0;
+		}
+
+		int bestScore = -INF;
+		for(int i = 0 ; i < n ; ++i) {
+			for(int j = 0 ; j < n ; ++j) {
+				if(board[i][j] == '.') {
+					board[i][j] = player;
+					bestScore = max(bestScore, minimizer(level+1, alpha, beta)-level);
+					alpha = max(bestScore, alpha);
+					board[i][j] = '.';
+					if(alpha >= beta) {
+						return alpha;
+					}
+				}
+			}
+		}
+		return bestScore;
+	}
+
+	int minimizer(int level, int alpha, int beta) {
+		// evaluate score based on current board.
+		int score = evaluate();
+		// if maximizer has won/lost return evaluated score.
+		if(score == 10 || score == -10) {
+			return score;
+		}
+		// if no moves are left then there is draw return 0 score.
+		if(!isMovesLeft()) {
+			return 0;
+		}
+
+		int bestScore = INF;
+		for(int i = 0 ; i < n ; ++i) {
+			for(int j = 0 ; j < n ; ++j) {
+				if(board[i][j] == '.') {
+					board[i][j] = opponent;
+					bestScore = min(bestScore, maximizer(level+1, alpha, beta)+level);
+					beta = min(beta, bestScore);
+					board[i][j] = '.';
+					if(alpha >= beta) {
+						return beta;
+					}
+				}
+			}
+		}
+		return bestScore;
 	}
 
 	// print the board.
@@ -196,7 +211,7 @@ int32_t main()
 
 	// initialize board
 	Game g(board, player, opponent);
-	g.getBestMove();
+	g.miniMaxAlgorithm();
 	g.print();
 
 	return 0;
